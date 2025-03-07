@@ -1,2 +1,2 @@
 #import das outras views aqui
-# from .user_view import *
+from .user_view import *
