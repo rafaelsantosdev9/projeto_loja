@@ -3,6 +3,6 @@
     height: 700px;
 }
 #carouselExample {
-    width: 75%; /* Define a largura como 75% da tela */
+    width: 100%; /* Define a largura como 75% da tela */
     margin: 0 auto; /* Centraliza o carrossel */
 }
