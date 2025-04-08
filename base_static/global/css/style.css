@@ -14,3 +14,73 @@
     margin-right: 20px;
 
 }
+
+.card {
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombras suaves */
+  }
+  
+  .card-img-top {
+    object-fit: cover; /* Ajusta a imagem dentro do card */
+    height: 200px; /* Altura fixa opcional */
+  }
+  
+  .container {
+    max-width: 1200px; /* Limite de largura */
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.pagination .step-links a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 5px 10px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination .step-links a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .step-links .current {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+}
+
+.pagination .step-links a.disabled {
+    color: #ccc;
+    pointer-events: none;
+    border-color: #ccc;
+}
+
+
+.animated-card {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.6s ease;
+}
+
+.animated-card.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animated-card.reveal:hover {
+  transform: translateY(0) scale(1.1);
+}
+  

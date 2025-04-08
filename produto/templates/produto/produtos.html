@@ -1,6 +1,5 @@
 {% extends "global/base.html" %}
-{% block conteudo %} 
-{% include "global/partials/_carousel.html"%}
+{% block conteudo %}
 {% load omfilters %}
 
 <div class="container mt-4">
@@ -10,7 +9,7 @@
       <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
         <div class="card h-100 animated-card " style="width: 100%;">
           {% if produto.imagem %}
-          <a href="{{ produto.slug }}">
+          <a href="{% url "produto:detalhe" produto.slug %}">
             <img src="{{ produto.imagem.url }}" class="card-img-top" alt="...">
           </a>
           {% endif %}
@@ -39,5 +38,10 @@
     
   </div>
 </div>
-{% include "global/partials/_pagination.html" %}
+<div class="row mt-3">
+  <div class="col">
+    {% include "global/partials/_pagination.html" %}
+  </div>
+</div>
+
 {% endblock conteudo %}

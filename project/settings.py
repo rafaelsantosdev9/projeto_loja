@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'loja', #AQUI adiciona a aplicação loja
     'produto', #AQUI adiciona a aplicação produto
+    'pedido',
+    'perfil',
+    
 
 
 
@@ -132,7 +135,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 #AQUI especifica um diretório adicional onde os arquivos estáticos serão procurados
 STATICFILES_DIRS = (

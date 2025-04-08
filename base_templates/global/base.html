@@ -4,15 +4,24 @@
 <head>
     <link rel="stylesheet" href="{% static 'global/css/style.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- <link rel="stylesheet" href="{% static 'loja/css/style.css' %}"> -->
-    <title>base.html</title>
+    <title>{% block titulo %}    {% endblock titulo %}</title>
     {% include "global/partials/_header.html" %}
+    
 </head>
-{% include "global/partials/_carousel.html"%}
+
 <body>
+    <main class="container mt-4 mb-4">
+        {% include "global/partials/_messages.html" %}
+    {% block conteudo %}{% endblock conteudo %}
+    </main>
+    <script src="{% static 'global/js/scripts.js' %}"></script>
+
+
     
 </body>
 </html>

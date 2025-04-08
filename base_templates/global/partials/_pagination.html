@@ -1,0 +1,28 @@
+{% if page_obj %}
+    <div class="pagination">
+        <span class="step-links">
+
+            {% if page_obj.has_previous %}
+                {% if from_index %}
+                    <a href="{% url 'produto:lista' %}">&laquo; Ver todos</a>
+                {% else %}
+                    <a href="?page=1&q={{ request.GET.q|default:'' }}">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q|default:'' }}">Previous</a>
+                {% endif %}
+            {% endif %}
+
+            <span class="current">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                {% if from_index %}
+                    <a href="{% url 'produto:lista' %}?page=2">Próxima página →</a>
+                {% else %}
+                    <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q|default:'' }}">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q|default:'' }}">Last &raquo;</a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+{% endif %}

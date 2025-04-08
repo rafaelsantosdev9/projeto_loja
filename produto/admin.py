@@ -1,13 +1,27 @@
 from django.contrib import admin
 from . import models 
 
-# Register your models here.
+
+
+class VariacaoInline(admin.TabularInline):
+    model = models.Variacao         
+    extra = 1 
+
+
 @admin.register(models.Produto)
 class ProdutoAdmin(admin.ModelAdmin):
-    list_display = 'nome','preco','tipo','imagem'
+    #quais inlines terão dentro 
+    inlines = [
+        VariacaoInline,
+    ]
+    list_display = 'nome','get_preco_formatado','get_preco_formatado_promo','tipo','descricao_curta'
     ordering = 'nome',
     search_fields = 'nome','tipo'
-    list_editable = 'preco','tipo',
+    
 
-   
+@admin.register(models.Variacao)
+class VariacaoAdmin(admin.ModelAdmin):
+    list_display = 'nome','produto','preco' 
+
+ 
     
