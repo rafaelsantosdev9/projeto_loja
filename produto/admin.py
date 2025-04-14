@@ -14,14 +14,14 @@ class ProdutoAdmin(admin.ModelAdmin):
     inlines = [
         VariacaoInline,
     ]
-    list_display = 'nome','get_preco_formatado','get_preco_formatado_promo','tipo','descricao_curta'
+    list_display = 'nome','get_preco_formatado','get_preco_formatado_promo','descricao_curta'
     ordering = 'nome',
-    search_fields = 'nome','tipo'
+    search_fields = 'nome',
     
 
 @admin.register(models.Variacao)
 class VariacaoAdmin(admin.ModelAdmin):
-    list_display = 'nome','produto','preco' 
+    list_display = 'nome','produto','preco',
 
  
     

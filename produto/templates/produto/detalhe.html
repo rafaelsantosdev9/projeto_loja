@@ -1,71 +1,88 @@
 {% extends "global/base.html" %}
 {% load omfilters %}
+
 {% block conteudo %}
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-lg-10">
+      <!-- Card de Produto -->
       <div class="card flex-row">
         {% if produto.imagem %}
         <div class="col-md-6">
-          <img src="{{ produto.imagem.url }}" class="img-fluid h-100 w-100 rounded-start object-fit-cover" alt="{{ produto.nome }}">
+          <img src="{{ produto.imagem.url }}" 
+               class="img-fluid h-100 w-100 rounded-start object-fit-cover" 
+               alt="{{ produto.nome }}">
         </div>
         {% endif %}
         <div class="col-md-6 d-flex flex-column justify-content-center p-4">
+          <!-- Título e Descrição do Produto -->
           <h1 class="card-title text-center">{{ produto.nome }}</h1>
           <p class="card-text text-muted text-center">{{ produto.descricao_curta }}</p>
-          
+
+          <!-- Preços -->
           <div class="text-center mb-3">
             {% if produto.preco_promocional %}
-              <span class="preco-promocional fs-5 text-success fw-bold">
+              <span id="variation-preco-promocional" 
+                    class="preco-promocional fs-5 text-success fw-bold">
                 {{ produto.preco_promocional|formata_preco }}
               </span>
-              <span class="preco-original text-muted text-decoration-line-through ms-2">
+              <span id="variation-preco" 
+                    class="preco-original text-muted text-decoration-line-through ms-2">
                 {{ produto.preco|formata_preco }}
               </span>
             {% else %}
-              <span class="preco fs-5 fw-bold">
-                {{ produto.preco }}
+              <span id="variation-preco" 
+                    class="preco fs-5 fw-bold">
+                {{ produto.preco|formata_preco }}
               </span>
             {% endif %}
           </div>
 
-          <div class="text-center mb-3">
-            <select name="material" class="form-select w-75 mx-auto" required>
-              <option value="PLA" disabled selected>PLA</option>
-              <option value="ABS">ABS</option>
-              <option value="PETG">PETG</option>
-            </select>
-          </div>
-
-          <div class="text-center">
-            <a href="{% url "loja:index" %}">Adicionar ao carrinho</a>
-
-
-
-
-          </div>
+          <!-- Formulário para adicionar ao carrinho -->
+          <form action="{% url 'produto:adicionaraocarrinho' produto.id %}" 
+                method="POST" 
+                class="form-control-lg" 
+                id="form-add-to-cart">
+            {% csrf_token %}
+            <div class="mb-3">
+              {% if variacoes.exists %}
+              <select id="select-variacoes" 
+                      name="variacao_id" 
+                      class="form-select w-75 mx-auto text-center" required>
+                <option value="">Selecione uma variação</option>
+                {% for variacao in variacoes %}
+                <option 
+                  data-preco="{{ variacao.preco|formata_preco  }}"
+                  data-preco-promocional="{{ variacao.preco_promocional|formata_preco  }}"
+                  value="{{ variacao.id }}">
+                  {{ variacao.nome }}
+                </option>
+                {% endfor %}
+              </select>
+              {% else %}
+              <input type="hidden" name="variacao_id" value="">
+              {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Adicionar ao carrinho
+            </button>
+          </form>
         </div>
       </div>
-
-      <!-- NOVA SEÇÃO DE DETALHES -->
+      
+      <!-- Nova Seção de Detalhes -->
       <div class="card mt-4">
         <div class="card-body">
           <h3 class="card-title">Descrição</h3>
-          <p class="card-text">
-            {{ produto.descricao_longa }}
-          </p>
-
+          <p class="card-text">{{ produto.descricao_longa }}</p>
           <hr>
-
-          <h5>{{produto.nome}}:</h5>
+          <h5>{{ produto.nome }}:</h5>
           <ul>
-            {{ produto.descricao_curta}}           
-            <li><strong>Preço:</strong> {{ produto.preco}}</li>
+            <li>{{ produto.descricao_curta }}</li>           
+            <li><strong>Preço:</strong> {{ produto.preco|formata_preco }}</li>
           </ul>
         </div>
       </div>
-      <!-- FIM DA NOVA SEÇÃO -->
-      
     </div>
   </div>
 </div>

@@ -20,8 +20,7 @@ class Produto(models.Model):
         upload_to='global/images/imagem-produtos',
         null=True,
         blank=True)
-    tipo = models.CharField(
-        default='ABS',max_length=4,choices=(('ABS','ABS'),('PLA','PLA'),('PETG','PETG')))
+    
         
     slug = models.SlugField(max_length=100,blank=True,null=True)
 
@@ -74,7 +73,8 @@ class Variacao(models.Model):
     nome = models.CharField(max_length=255,blank=True,null=True)  
     preco = models.FloatField()     
     preco_promocional = models.FloatField(default=0)
-    estoque = models.PositiveIntegerField(default=1)
+    estoque = models.PositiveIntegerField(default=0)
+    
     def __str__(self):
         return self.nome or self.produto.nome
     class Meta:

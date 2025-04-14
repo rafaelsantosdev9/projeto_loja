@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect     
-from produto.models import Produto
+from produto.models import Produto,Variacao
 from django.core.paginator import Paginator
-
+from django.contrib import messages
+from django.urls import reverse
 def lista_produto(request):
     produtos = Produto.objects.all()
+    
+
     paginator = Paginator(produtos, 10)  
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
     context = {
         'produtos': produtos,
         'page_obj': page_obj,
@@ -15,21 +19,80 @@ def lista_produto(request):
 
 
 def detalhe_produto(request, slug):
-    produtos = Produto.objects.filter(slug=slug)  # Retorna uma lista de objetos
-    if produtos.exists():
-        produto = produtos.first()  # Obtém o primeiro registro encontrado
+    produto = get_object_or_404(Produto, slug=slug)
+    variacoes = Variacao.objects.filter(produto=produto)
+    return render(request, 'produto/detalhe.html', {'produto': produto, 'variacoes': variacoes})
+
+
+def adicionar_carrinho(request, id):
+    if request.method != 'POST':
+        return redirect('produto:lista')
+
+    variacao_id = request.POST.get('variacao_id')
+
+    if not variacao_id:
+        messages.error(request, 'Nenhuma variação selecionada.')
+        return redirect('produto:detalhe', slug=Produto.objects.get(id=id).slug)
+
+    variacao = get_object_or_404(Variacao, id=variacao_id)
+    
+    carrinho = request.session.get('carrinho', {})
+    variacao_id_str = str(variacao.id)
+
+    # OBSERVAÇÃO:
+    # O problema estava no uso de "self.request" dentro de uma view baseada em função (function-based view).
+    # A palavra-chave "self" só é utilizada dentro de métodos de @3@ classes @3@, como nas views baseadas em classe (Class-Based Views).
+    # Como essa é uma função normal, o correto é usar apenas "request" diretamente.
+    if variacao.estoque < 1:
+        messages.error(
+            request,
+                       'estoque insuficiente')
+
+    if variacao_id_str in carrinho:
+        carrinho[variacao_id_str]['quantidade'] += 1
     else:
-        produto = None  # Caso não existam registros
-    return render(request, 'produto/detalhe.html', {'produto': produto})
+        carrinho[variacao_id_str] = {
+            'produto_id': variacao.produto.id,
+            'nome': variacao.nome or variacao.produto.nome,
+            'preco': variacao.preco,
+            'preco_promocional': variacao.preco_promocional,
+            'quantidade': 1,
+            'slug': variacao.produto.slug,
+        }
 
-def adicionar_carrinho(request,id):
-    return render(request, 'produto/produtos.html')
+    request.session['carrinho'] = carrinho
+    request.session.modified = True
+    messages.success(request, f'Produto "{variacao.produto.nome}" ({variacao.nome}) )) adicionado ao carrinho.')
 
-def remover_carrinho(request):
-    return render(request, 'loja/produtos.html')
+
+    return redirect('produto:detalhe', slug=variacao.produto.slug)
+
+def remover_carrinho(request, id):
+    carrinho = request.session.get('carrinho', {})
+
+    if str(id) in carrinho:
+        del carrinho[str(id)]
+        request.session['carrinho'] = carrinho
+        request.session.modified = True
+        messages.success(request, 'Produto removido do carrinho.')
+
+    return redirect('produto:carrinho')
 
 def carrinho(request):
-    return render(request, 'loja/produtos.html')
+    carrinho = request.session.get('carrinho', {})
+    context = {
+        'carrinho': carrinho
+    }
+    return render(request, 'produto/carrinho.html', context)
 
 def finalizar(request):
-    return render(request, 'loja/produtos.html')
+    carrinho = request.session.get('carrinho', {})
+
+    if not carrinho:
+        messages.error(request, 'Seu carrinho está vazio.')
+        return redirect('produto:lista_produto')
+
+    # Aqui você poderia salvar o pedido, enviar e-mail, etc.
+    messages.success(request, 'Compra finalizada com sucesso!')
+    request.session['carrinho'] = {}
+    return redirect('produto:lista_produto')

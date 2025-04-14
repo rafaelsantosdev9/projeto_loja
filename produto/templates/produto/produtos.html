@@ -30,7 +30,7 @@
                   </span>
                 {% endif %}
               </div> 
-            <a href="{{ produto.slug }}" class="btn btn-primary">Comprar {{ produto.nome }}</a>
+            <a href="{% url "produto:detalhe" produto.slug %}" class="btn btn-primary">Comprar {{ produto.nome }}</a>
           </div>
         </div>
       </div>
