@@ -9,7 +9,8 @@
       <div class="card flex-row">
         {% if produto.imagem %}
         <div class="col-md-6">
-          <img src="{{ produto.imagem.url }}" 
+          <img id= 'produto-img'
+               src="{{ produto.imagem.url }}" 
                class="img-fluid h-100 w-100 rounded-start object-fit-cover" 
                alt="{{ produto.nome }}">
         </div>
@@ -54,6 +55,7 @@
                 <option 
                   data-preco="{{ variacao.preco|formata_preco  }}"
                   data-preco-promocional="{{ variacao.preco_promocional|formata_preco  }}"
+                  data-img="{% if variacao.imagem %}{{ variacao.imagem.url }}{% else %}{{ produto.imagem.url }}{% endif %}"
                   value="{{ variacao.id }}">
                   {{ variacao.nome }}
                 </option>

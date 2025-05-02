@@ -69,3 +69,45 @@ if (!selectVariacao || selectVariacao.options.length === 0) {
     // Produto sem variações; desabilitar validação de variação
     document.getElementById('form-add-to-cart').submit();
 }
+
+// TROCA DE IMAGEM DO DETALHE.HTML
+document.addEventListener('DOMContentLoaded', function () {
+    const selectVariacoes = document.getElementById('select-variacoes');
+    const imgElement = document.getElementById('produto-img');
+
+    selectVariacoes.addEventListener('change', function () {
+      const selectedOption = this.options[this.selectedIndex];
+      const newImageUrl = selectedOption.getAttribute('data-img');
+
+      if (newImageUrl && imgElement) {
+        imgElement.src = newImageUrl;
+      }
+
+      // Também pode atualizar preços se quiser
+      const preco = selectedOption.getAttribute('data-preco');
+      const precoPromocional = selectedOption.getAttribute('data-preco-promocional');
+
+      const precoEl = document.getElementById('variation-preco');
+      const precoPromoEl = document.getElementById('variation-preco-promocional');
+
+      if (precoPromoEl && precoPromocional && precoPromocional.trim() !== '') {
+        precoPromoEl.textContent = precoPromocional;
+        precoEl.textContent = preco;
+        precoPromoEl.style.display = 'inline';
+        precoEl.classList.add('text-decoration-line-through');
+      } else {
+        precoEl.textContent = preco;
+        if (precoPromoEl) precoPromoEl.style.display = 'none';
+        precoEl.classList.remove('text-decoration-line-through');
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    const carrinhoImagens = document.querySelectorAll('td img.img-thumbnail');
+
+    carrinhoImagens.forEach(function (img) {
+        img.onerror = function () {
+            this.src = '/static/img/sem-imagem.png'; // Caminho padrão para imagem de fallback
+        };
+    });
+});

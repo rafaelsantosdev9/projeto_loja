@@ -5,10 +5,11 @@ import re
 from utils.validadordecpf import valida_cpf
 # Create your models here.
 class Perfil(models.Model):
-    usuario = models.ForeignKey(User,on_delete=models.CASCADE)
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE,
+                                   verbose_name='Usuário')
     nome = models.CharField(max_length=50)
     telefone = models.CharField(max_length=50)
-    email = models.EmailField(max_length=200)
+    
     endereco = models.CharField(max_length=500)
     cpf = models.CharField(max_length=11,help_text='Apenas numeros')
     numero = models.CharField(max_length=5)

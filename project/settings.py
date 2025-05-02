@@ -38,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'loja', #AQUI adiciona a aplicação loja
-    'produto', #AQUI adiciona a aplicação produto
+    'loja',
+    'produto', 
     'pedido',
     'perfil',
+    "crispy_forms",
+    
     
 
 
@@ -49,7 +51,8 @@ INSTALLED_APPS = [
 
     'debug_toolbar', #remove debug toolbar
 ]
-
+CRISPY_TEMPLATE_PACK = 'boostrap4'
+LOGIN_URL = 'perfil:login'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 
 
 

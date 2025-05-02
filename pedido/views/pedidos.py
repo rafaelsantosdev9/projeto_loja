@@ -4,7 +4,7 @@ def pagar (request):
     return render(request, 'loja/produtos.html')
 
 
-def fechar_pedido(request):
+def fecharpedido(request):
     return render(request, 'loja/produtos.html')
 
 def detalhe(request,id):

@@ -4,6 +4,6 @@ from pedido import views
 app_name = "pedido"
 urlpatterns = [
   path('',views.pagar,name = "pagar"),  
-  path('fechar_pedido/',views.fechar_pedido,name = "fechar_pedido"),  
+  path('salvarpedido/',views.fecharpedido,name = "salvarpedido"),  
   path('detalhe/',views.detalhe,name = "detalhe"),  
 ]

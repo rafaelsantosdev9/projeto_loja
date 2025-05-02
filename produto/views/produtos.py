@@ -22,24 +22,41 @@ def detalhe_produto(request, slug):
     produto = get_object_or_404(Produto, slug=slug)
     variacoes = Variacao.objects.filter(produto=produto)
     return render(request, 'produto/detalhe.html', {'produto': produto, 'variacoes': variacoes})
-
+    
 
 def adicionar_carrinho(request, id):
     if request.method != 'POST':
         return redirect('produto:lista')
 
     variacao_id = request.POST.get('variacao_id')
+    
 
     if not variacao_id:
         messages.error(request, 'Nenhuma variação selecionada.')
         return redirect('produto:detalhe', slug=Produto.objects.get(id=id).slug)
 
     variacao = get_object_or_404(Variacao, id=variacao_id)
+    variacao_estoque = variacao.estoque
     
+    produto = variacao.produto
     carrinho = request.session.get('carrinho', {})
     variacao_id_str = str(variacao.id)
+   
+    produto_nome = variacao.nome
+    variacao_nome = variacao.nome or ''
+    preco_unitario = variacao.preco
+    preco_unitario_promocional = variacao.preco_promocional
+    quantidade = 1
+    imagem_url = ''
+    if variacao.imagem:
+        imagem_url = variacao.imagem.url
+    elif produto.imagem:
+        imagem_url = produto.imagem.url 
+    
+    
 
-    # OBSERVAÇÃO:
+
+
     # O problema estava no uso de "self.request" dentro de uma view baseada em função (function-based view).
     # A palavra-chave "self" só é utilizada dentro de métodos de @3@ classes @3@, como nas views baseadas em classe (Class-Based Views).
     # Como essa é uma função normal, o correto é usar apenas "request" diretamente.
@@ -47,29 +64,53 @@ def adicionar_carrinho(request, id):
         messages.error(
             request,
                        'estoque insuficiente')
+        return redirect('produto:detalhe', slug=Produto.objects.get(id=id).slug) 
 
     if variacao_id_str in carrinho:
-        carrinho[variacao_id_str]['quantidade'] += 1
+        quantidade_carrinho = carrinho[variacao_id]['quantidade']
+        quantidade_carrinho += 1
+        # carrinho[variacao_id_str]['quantidade'] += 1
+        if variacao_estoque < quantidade_carrinho:
+            messages.warning(
+                request,f'Estoque insuficiente para {quantidade_carrinho} no produto '
+                f'{variacao.nome}'
+            )
+
+            quantidade_carrinho = variacao_estoque
+
+        carrinho[variacao_id_str]['quantidade'] = quantidade_carrinho
+        carrinho[variacao_id_str]['preco_quantitativo'] = preco_unitario * \
+                quantidade_carrinho  
+        carrinho[variacao_id_str]['preco_quantitativo_promocional'] = preco_unitario_promocional * \
+                quantidade_carrinho
     else:
         carrinho[variacao_id_str] = {
-            'produto_id': variacao.produto.id,
-            'nome': variacao.nome or variacao.produto.nome,
-            'preco': variacao.preco,
-            'preco_promocional': variacao.preco_promocional,
-            'quantidade': 1,
-            'slug': variacao.produto.slug,
-        }
+        'produto_id': produto.id,
+        'nome_produto': produto.nome,  # <-- nome do produto
+        'nome': variacao.nome or produto.nome,  # <-- nome da variação
+        'preco': variacao.preco,
+        'preco_unitario': preco_unitario,
+        'preco_unitario_promocional': preco_unitario_promocional,
+        'preco_quantitativo': preco_unitario,
+        'preco_quantitativo_promocional': preco_unitario_promocional,
+        'preco_promocional': variacao.preco_promocional,
+        'quantidade': 1,
+        'slug': produto.slug,
+        'imagem': imagem_url,  # <-- url da imagem
+}
 
+    request.session.save()
+    print(carrinho)
     request.session['carrinho'] = carrinho
     request.session.modified = True
-    messages.success(request, f'Produto "{variacao.produto.nome}" ({variacao.nome}) )) adicionado ao carrinho.')
+    messages.success(request, f'Produto "{variacao.produto.nome}" ({variacao.nome}) )) adicionado ao carrinho. {carrinho[variacao_id_str]["quantidade"]}')
 
 
     return redirect('produto:detalhe', slug=variacao.produto.slug)
 
 def remover_carrinho(request, id):
     carrinho = request.session.get('carrinho', {})
-
+    
     if str(id) in carrinho:
         del carrinho[str(id)]
         request.session['carrinho'] = carrinho
@@ -80,8 +121,17 @@ def remover_carrinho(request, id):
 
 def carrinho(request):
     carrinho = request.session.get('carrinho', {})
+    total = 0
+    total_promocional = 0
+
+    for item in carrinho.values():
+        total += item.get('preco_quantitativo', 0)
+        total_promocional += item.get('preco_quantitativo_promocional', 0)
+
     context = {
-        'carrinho': carrinho
+        'carrinho': carrinho,
+        'total': total,
+        'total_promocional': total_promocional,
     }
     return render(request, 'produto/carrinho.html', context)
 
@@ -90,9 +140,14 @@ def finalizar(request):
 
     if not carrinho:
         messages.error(request, 'Seu carrinho está vazio.')
-        return redirect('produto:lista_produto')
+        return redirect('produto:lista')
 
     # Aqui você poderia salvar o pedido, enviar e-mail, etc.
     messages.success(request, 'Compra finalizada com sucesso!')
     request.session['carrinho'] = {}
-    return redirect('produto:lista_produto')
+    return redirect('produto:lista')
+def esvaziar_carrinho(request):
+    request.session['carrinho'] = {}
+    request.session.modified = True
+    messages.success(request, 'Carrinho esvaziado.')
+    return redirect('produto:carrinho')

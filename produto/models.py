@@ -74,9 +74,12 @@ class Variacao(models.Model):
     preco = models.FloatField()     
     preco_promocional = models.FloatField(default=0)
     estoque = models.PositiveIntegerField(default=0)
-    
+    imagem = models.ImageField(upload_to='variacoes/', null=True, blank=True)
     def __str__(self):
         return self.nome or self.produto.nome
     class Meta:
         verbose_name = 'Variacao'
         verbose_name_plural = 'Variações'
+
+
+
