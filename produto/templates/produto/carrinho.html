@@ -2,7 +2,7 @@
 {% block conteudo %}
 {% load omfilters %}
 {% if carrinho %}
-
+{% block titulo %}Carrinho{% endblock titulo %}Carrinho
 <div class="row mt-3">
     <div class="col">
         <h3>Carrinho de Compras</h3>
@@ -10,71 +10,7 @@
     </div>
 </div>
 
-<div class="table-responsive mt-4">
-    <table class="table table-bordered table-hover align-middle">
-        <thead class="thead-dark">
-            <tr>
-                <th>Imagem</th>
-                <th>Produto</th>
-           
-                <th>Quantidade</th>
-                <th>Preço</th>
-                <th>Total</th>
-                <th>Remover carrinho</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-            {% for key, item in carrinho.items %}
-            <tr>
-                <td>
-                    {% if item.imagem %}
-                    <a href="{% url 'produto:detalhe' item.slug %}">
-                        <img src="{{ item.imagem }}" class="img-thumbnail" style="max-width: 80px;">
-                    </a>    
-                    {% else %}
-                        Sem imagem
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'produto:detalhe' item.slug %}">
-                        {{ item.nome }}
-                    </a>
-                </td>
-                
-                <td>{{ item.quantidade }}</td>
-                <td>
-                    {% if item.preco_promocional and item.preco_promocional > 0 %}
-                        <span style="color: green; font-weight: bold;">
-                            R$ {{ item.preco_promocional|floatformat:2 }}
-                        </span>
-                        <br>
-                        <small style="text-decoration: line-through; color: #888;">
-                            R$ {{ item.preco_unitario|floatformat:2 }}
-                        </small>
-                    {% else %}
-                        R$ {{ item.preco_unitario|floatformat:2 }}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if item.preco_promocional and item.preco_promocional > 0 %}
-                        R$ {{ item.preco_quantitativo_promocional|floatformat:2 }}
-                    {% else %}
-                        R$ {{ item.preco_quantitativo|floatformat:2 }}
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'produto:removerdocarrinho' key %}"  
-                       class="btn btn-danger btn-sm rounded-circle d-inline-flex align-items-center justify-content-center"
-                       style="width: 24px; height: 24px; text-decoration: none;">
-                        <strong style="color: white;">×</strong>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+{% include "global/partials/_carrinho.html" %}
 
 <div class="row mt-4">
     <div class="col-lg-6">
@@ -92,8 +28,12 @@
                 Esvaziar Carrinho
             </button>
         </form>
-        <a class="btn btn-success btn-lg btn-block mb-2" href="{% url 'produto:finalizar' %}">Finalizar Compra</a>
-        <a class="btn btn-outline-primary btn-lg btn-block" href="{% url 'produto:lista' %}">Continuar Comprando</a>
+        {% if request.user.is_authenticated %}
+        <a class="btn btn-success btn-lg btn-block mb-2" href="{% url 'produto:resumo' %}">Continuar compra</a>
+        {% else %}
+        <a class="btn btn-success btn-lg btn-block mb-2" href="{% url 'perfil:login' %}">Continuar Compra</a>
+        {% endif %}
+        <a class="btn btn-outline-primary btn-lg btn-block" href="{% url 'produto:lista' %}">Adicionar mais produtos</a>
     </div>
 </div>
 

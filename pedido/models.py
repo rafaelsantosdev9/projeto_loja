@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User 
-from produto.models import Produto
+from produto.models import Produto,Variacao
 
 
 # Create your models here.
 class Pedido(models.Model):
     usuario = models.ForeignKey(User,on_delete=models.CASCADE)
     total = models.FloatField()
+    quantidade_total = models.PositiveBigIntegerField()
     status = models.CharField(
         default= 'C',
         max_length= 1,
@@ -27,7 +28,7 @@ class ItemPedido(models.Model):
     produto = models.CharField(max_length=255)
     produto_id = models.ForeignKey(Produto,on_delete=models.CASCADE)
     variacao = models.CharField(max_length=255)
-    variacao_id = models.PositiveIntegerField()
+    variacao_id = models.PositiveBigIntegerField()
     preco = models.FloatField()
     preco_promocional = models.FloatField(default=0)
     quantidade = models.PositiveIntegerField()

@@ -1,7 +1,21 @@
 {% extends "global/base.html" %}
+{% block titulo %}Home{% endblock titulo %}
 {% block conteudo %} 
+{% load static %}
 {% include "global/partials/_carousel.html"%}
 {% load omfilters %}
+
+<!-- Seção Metade Imagem, Metade Texto -->
+<div class="metade-imagem-texto">
+  <div class="metade imagem"></div>
+  <div class="metade texto">
+    <div class="conteudo-texto">
+      <h2>Bem-vindo à nossa loja!</h2>
+      <p>Descubra produtos exclusivos com qualidade e preço justo.</p>
+      <a href="{% url "produto:lista" %}" class="btn btn-primary">Ver Produtos</a>
+    </div>
+  </div>
+</div>
 
 <div class="container mt-4">
   

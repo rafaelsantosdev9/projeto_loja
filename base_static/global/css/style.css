@@ -84,3 +84,49 @@
   transform: translateY(0) scale(1.1);
 }
   
+.metade-imagem-texto {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 400px;
+  margin: 40px 0;
+}
+
+.metade {
+  flex: 1 1 50%;
+  min-height: 400px;
+}
+
+.metade.imagem {
+  background-image: url('../images/logo.png'); /* ajuste o caminho conforme a imagem que você tem */
+  background-size: cover;
+  background-position: center;
+}
+
+.metade.texto {
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.conteudo-texto h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.conteudo-texto p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .metade-imagem-texto {
+    flex-direction: column;
+  }
+
+  .metade {
+    flex: 1 1 100%;
+  }
+}

@@ -4,6 +4,7 @@ from . import models
 
 class ItemPedidoInline(admin.TabularInline):
     model = models.ItemPedido
+    
     extra = 1
 
 

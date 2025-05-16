@@ -1,9 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from perfil.forms import UserForm,PerfilForm
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate ,login as auth_login
+from django.contrib.auth import logout
+from django.contrib import messages
 #para salvar o carrinho
 import copy
 def criar(request):
+    #se já tiver logado vai pro template para atualizar dados
     if request.user.is_authenticated:
         return redirect('perfil:atualizar')
 
@@ -23,7 +26,7 @@ def criar(request):
             username = userform.cleaned_data.get('username')
             password = userform.cleaned_data.get('password')
             email = userform.cleaned_data.get('email')
-
+            
             usuario = userform.save(commit=False)
             usuario.set_password(password)
             usuario.save()
@@ -36,7 +39,7 @@ def criar(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)  # Loga o usuário
-
+                messages.success(request, 'cadastro realizado com sucesso')
             return redirect('perfil:atualizar')  
 
     context = {
@@ -107,7 +110,7 @@ def atualizar(request):
                 perfil.save()
 
             else:
-                 
+                 #salvando usuario e perfil
                  usuario = userform.save(commit=False)
                  usuario.set_password(password)
                  usuario.save()
@@ -138,7 +141,9 @@ def atualizar(request):
 
     return render(request, 'perfil/criar.html', context)
 def login(request):
+    #se usuario enviou algo
     if request.method == 'POST':
+        
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -151,12 +156,23 @@ def login(request):
             carrinho = copy.deepcopy(request.session.get('carrinho', {}))
             request.session['carrinho'] = carrinho
             request.session.save()
+            if carrinho:
+                messages.success(request,f'Agora {username} pode terminar a compra' )
+                return redirect('produto:carrinho')
+            else:
 
-            
-            return redirect('produto:lista')  # Ou onde quiser mandar o usuário após login
+                messages.success(request,f'Aproveite os produtos' )
+                return redirect('produto:lista')
+              # Ou onde quiser mandar o usuário após login
         else:
-            ...
-
-    return render(request, 'perfil/login.html')  # Certifique-se de que esse é o nome correto do template
-def logout (request):
-    return render(request, 'perfil/criar.html')
+             
+             messages.error(request,f'Usuario {username} está incorreto ou senha invalida' )
+             
+    return render(request, 'perfil/login.html') 
+    
+def logout_view (request):
+    carrinho = copy.deepcopy(request.session.get('carrinho', {}))
+    logout(request)
+    request.session['carrinho'] = carrinho
+    request.session.save()
+    return redirect('produto:lista')

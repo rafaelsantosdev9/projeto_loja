@@ -1,10 +1,32 @@
 from django.shortcuts import render, get_object_or_404, redirect     
 from produto.models import Produto,Variacao
+from perfil.models import Perfil
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.urls import reverse
+from django.db.models import Q
+
+def busca(request):
+    valor_busca = request.GET.get('q','').strip()
+
+    if valor_busca =='':
+        return redirect('produto:lista')
+    # filtra pela busca
+    produtos = Produto.objects.filter( \
+         Q(nome__icontains = valor_busca)|  \
+         Q(descricao_curta = valor_busca))   \
+        .order_by('-id')
+    paginator = Paginator(produtos,3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    contexto = {
+        'page_obj':page_obj,
+        'valor_busca':valor_busca
+    }
+    return render(request,'produto/produtos.html',contexto)
 def lista_produto(request):
-    produtos = Produto.objects.all()
+    #ordenando por nome 
+    produtos = Produto.objects.all().order_by('-nome')
     
 
     paginator = Paginator(produtos, 10)  
@@ -85,7 +107,7 @@ def adicionar_carrinho(request, id):
                 quantidade_carrinho
     else:
         carrinho[variacao_id_str] = {
-        'produto_id': produto.id,
+        'produto_id': produto.id or variacao_id,
         'nome_produto': produto.nome,  # <-- nome do produto
         'nome': variacao.nome or produto.nome,  # <-- nome da variação
         'preco': variacao.preco,
@@ -146,8 +168,24 @@ def finalizar(request):
     messages.success(request, 'Compra finalizada com sucesso!')
     request.session['carrinho'] = {}
     return redirect('produto:lista')
+
 def esvaziar_carrinho(request):
+
     request.session['carrinho'] = {}
     request.session.modified = True
     messages.success(request, 'Carrinho esvaziado.')
     return redirect('produto:carrinho')
+
+def resumo_compra(request):
+    if not request.user.is_authenticated:
+        return redirect('produto:lista')
+    perfil = Perfil.objects.filter(usuario=request.user).exists()
+    if not perfil:
+        messages.error(request,'É necessario que você tenha dados de perfil cadastrados')
+        return redirect('perfil:criar')
+    contexto = {
+        'usuario':request.user,
+        'carrinho':request.session['carrinho'],
+
+    }
+    return render (request,'produto/resumo.html',contexto)

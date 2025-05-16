@@ -1,0 +1,8 @@
+{% extends "global/base.html" %}
+{% load static %}
+{% load omfilters %}
+{% block conteudo %}
+{% block titulo %}Detalhe pedido {{pedido.id}}{% endblock titulo %}
+{% include "global/partials/_pedido.html" %}
+
+{% endblock conteudo %}

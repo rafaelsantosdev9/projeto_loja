@@ -25,23 +25,23 @@
                 <a class="nav-link" href="{% url 'produto:lista' %}">Produtos</a>
 
               </li>
-              
+              {% if request.user.is_authenticated %}
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Quem somos
+                <a class="nav-link dropdown-toggle" href=#"" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Conta
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Suporte</a></li>
-                  <li><a class="dropdown-item" href="#">Sobre</a></li>
-                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url "perfil:criar" %}">Atualizar Dados</a></li>
+                  <li><a class="dropdown-item" href="{% url "perfil:logout" %}">Sair</a></li>
+                  <li><a class="dropdown-item" href="{% url "perfil:criar" %}">Meus pedidos</a></li>
+                  <li><a class="dropdown-item" href="{% url "pedido:lista" %}">Lista</a></li>
                   <li><a class="dropdown-item" href="#">Contato</a></li>
                   
                 </ul>
               </li>
+              {% endif %}
               
-              <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li>
+              
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'produto:carrinho' %}">Carrinho
                 <span class="nav-cart-count mr-1">
@@ -54,6 +54,7 @@
                 </a>
                 
               </li>
+              {% if not request.user.is_authenticated %}
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'perfil:criar' %}">Cadastrar
                                            
@@ -67,9 +68,20 @@
                 
               </li>
             </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">🔍</button>
+            {% endif %}
+            <form action = '{% url "produto:busca" %}'class="d-flex"
+               method = 'GET' 
+               
+             >
+            <input type ='text'
+            id = 'Search' 
+            name = q
+            {% comment %} Aqui é pra corrigir erro  {% endcomment %}
+            value="{{ request.GET.q|default_if_none:''|escape }}" 
+            placeholder="Busca"
+            class="form-control " type="search" 
+            aria-label="Busca">
+            
             </form>
           </div>
         </div>
