@@ -10,20 +10,29 @@
           src="{% static 'global/images/logo.png' %}"
           alt=""/>
         </a>
-        <p>{{request.user}}</p>
+        
         
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+               <li class="nav-item">
+                <p class="nav-link">Bem vindo {{request.user}}</p>
               </li>
-
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url "loja:index" %}">Home</a>
+              </li>
+              
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'produto:lista' %}">Produtos</a>
 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://www.instagram.com/3d_pinheiro/">Instagram
+                                           
+                </a>
+                
               </li>
               {% if request.user.is_authenticated %}
               <li class="nav-item dropdown">
@@ -67,10 +76,12 @@
                 </a>
                 
               </li>
+
+               
             </ul>
             {% endif %}
             <form action = '{% url "produto:busca" %}'class="d-flex"
-               method = 'GET' 
+               method = 'GET' style="max-height: 40px; max-width: 200px;"
                
              >
             <input type ='text'

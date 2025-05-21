@@ -9,6 +9,11 @@ from django.utils.text import slugify
 ########
 from utils import utils
 
+class Genero(models.Model):
+    nome = models.CharField(max_length=100, unique=True)
+    def __str__(self):
+        return self.nome
+
 
 
 class Produto(models.Model):
@@ -16,6 +21,8 @@ class Produto(models.Model):
     preco = models.FloatField(verbose_name='Preço')
     preco_promocional = models.FloatField(default=0,verbose_name='Preço Promocional')
     descricao_curta = models.TextField(max_length=200)
+    descricao_longa = models.TextField(max_length=800,null=True)
+    
     imagem = models.ImageField(
         upload_to='global/images/imagem-produtos',
         null=True,
@@ -23,6 +30,7 @@ class Produto(models.Model):
     
         
     slug = models.SlugField(max_length=100,blank=True,null=True)
+    generos = models.ManyToManyField(Genero, blank=True)
 
     def __str__(self):
         return self.nome
@@ -80,6 +88,5 @@ class Variacao(models.Model):
     class Meta:
         verbose_name = 'Variacao'
         verbose_name_plural = 'Variações'
-
 
 

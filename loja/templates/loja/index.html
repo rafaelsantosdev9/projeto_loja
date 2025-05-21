@@ -10,9 +10,9 @@
   <div class="metade imagem"></div>
   <div class="metade texto">
     <div class="conteudo-texto">
-      <h2>Bem-vindo à nossa loja!</h2>
-      <p>Descubra produtos exclusivos com qualidade e preço justo.</p>
-      <a href="{% url "produto:lista" %}" class="btn btn-primary">Ver Produtos</a>
+      <h2>Quer um modelo diferente?</h2>
+      <p>Entre em contato.</p>
+      <a href="https://wa.me/61998645333?text=Olá" class="btn btn-success" target="_blank">Chamar no Whatsapp</a>
     </div>
   </div>
 </div>
@@ -30,7 +30,7 @@
           {% endif %}
           <div class="card-body">
             <h5 class="card-title">{{ produto.nome }}</h5>
-            <p class="card-text">{{ produto.descricao_curta }}</p>
+            
               <div class="container produto-preco-block text-center">
                 {% if produto.preco_promocional %}
                   <span class="preco-produto">
@@ -45,7 +45,7 @@
                   </span>
                 {% endif %}
               </div> 
-            <a href="{% url "produto:detalhe" produto.slug %}" class="btn btn-primary">Comprar {{ produto.nome }}</a>
+            <a href="{% url "produto:detalhe" produto.slug %}" class="btn btn-primary d-block mx-auto" style="width: fit-content;">Comprar Produto </a>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-10">
       <!-- Card de Produto -->
-      <div class="card flex-row">
+      <div class="card flex-row text-center">
         {% if produto.imagem %}
         <div class="col-md-6">
           <img id= 'produto-img'
@@ -51,13 +51,14 @@
               <select id="select-variacoes" 
                       name="variacao_id" 
                       class="form-select w-75 mx-auto text-center" required>
-                <option value="">Selecione uma variação</option>
+                
                 {% for variacao in variacoes %}
                 <option 
                   data-preco="{{ variacao.preco|formata_preco  }}"
                   data-preco-promocional="{{ variacao.preco_promocional|formata_preco  }}"
                   data-img="{% if variacao.imagem %}{{ variacao.imagem.url }}{% else %}{{ produto.imagem.url }}{% endif %}"
-                  value="{{ variacao.id }}">
+                  value="{{ variacao.id }}"
+                  {% if forloop.first %}selected{% endif %}>
                   {{ variacao.nome }}
                 </option>
                 {% endfor %}
@@ -77,13 +78,17 @@
       <div class="card mt-4">
         <div class="card-body">
           <h3 class="card-title">Descrição</h3>
-          <p class="card-text">{{ produto.descricao_longa }}</p>
+          {% comment %} linebreaksbr pula as linhas,não mantem tudo junto {% endcomment %}
+          <p class="card-text">{{ produto.descricao_longa|linebreaksbr }}</p>
           <hr>
           <h5>{{ produto.nome }}:</h5>
           <ul>
-            <li>{{ produto.descricao_curta }}</li>           
-            <li><strong>Preço:</strong> {{ produto.preco|formata_preco }}</li>
+            <li>{{ produto.descricao_curta }}</li>
+           
           </ul>
+          {% if produto.genero %}
+      <p><strong>Gênero:</strong> {{ produto.genero.nome }}</p>
+        {% endif %}
         </div>
       </div>
     </div>

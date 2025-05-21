@@ -4,8 +4,32 @@
 {% load omfilters %}
 
 <div class="container mt-4">
+  <div class="container mb-4">
+  <form method="get" class="mb-3">
+  <div class="d-flex align-items-center gap-2">
+    <label for="ordenar">Ordenar por:</label>
+    <select name="ordenar" id="ordenar" class="form-select w-auto" onchange="this.form.submit();">
+      <option value="">Selecione</option>
+      <option value="preco_asc" {% if ordenar == 'preco_asc' %}selected{% endif %}>Mais barato</option>
+      <option value="preco_desc" {% if ordenar == 'preco_desc' %}selected{% endif %}>Mais caro</option>
+    </select>
+  </div>
+</form>
+  <div class="d-flex flex-wrap gap-2">
+    {% if generos %}
+    <h4>Filtrar por Gênero:</h4>
+    {% for genero in generos %}
+    
+      <a href="{% url 'produto:produtos_por_genero' genero.id %}" class="btn btn-outline-secondary btn-sm">
+        {{ genero.nome }}
+      </a>
+    {% endfor %}
+    {% endif %}
+  </div>
+</div>
   
   <div class="row">
+    {% if page_obj %}
     {% for produto in page_obj %}
       <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
         <div class="card h-100 animated-card " style="width: 100%;">
@@ -14,9 +38,9 @@
             <img src="{{ produto.imagem.url }}" class="card-img-top" alt="...">
           </a>
           {% endif %}
-          <div class="card-body">
+          <div class="card-body text-center mt-2">
             <h5 class="card-title">{{ produto.nome }}</h5>
-            <p class="card-text">{{ produto.descricao_curta }}</p>
+            <p class="card-text"></p>
               <div class="container produto-preco-block text-center">
                 {% if produto.preco_promocional %}
                   <span class="preco-produto">
@@ -31,11 +55,20 @@
                   </span>
                 {% endif %}
               </div> 
-            <a href="{% url "produto:detalhe" produto.slug %}" class="btn btn-primary">Comprar {{ produto.nome }}</a>
+            <div class="text-center mt-2">
+                <a href="{% url "produto:detalhe" produto.slug %}" class="btn btn-primary">Comprar Produto</a>
+            </div>
           </div>
         </div>
       </div>
     {% endfor %}
+    {% else %}
+      <div class="col-12 text-center mt-4">
+      <h4 class="text-muted">Nenhum produto encontrado para "{{ valor_busca }}"</h4>
+      </div>
+
+
+    {% endif %}
     
   </div>
 </div>

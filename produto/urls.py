@@ -12,6 +12,8 @@ urlpatterns = [
     path('esvaziarcarrinho/', views.esvaziar_carrinho, name="esvaziarcarrinho"),
     path('resumo/', views.resumo_compra, name="resumo"),
     path('busca/', views.busca, name = "busca"),
+    path('genero/<int:genero_id>/', views.filtro_genero, name='produtos_por_genero'),
+    path('whatsapp-pedido/', views.whatsapp_pedido, name='whatsapp_pedido'),
     path('<slug:slug>/', views.detalhe_produto, name = "detalhe"),
     
 ]

@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 
 def index(request):
     produtos = Produto.objects.all()
-    paginator = Paginator(produtos, 4)  # 8 produtos por página
+    paginator = Paginator(produtos, 8)  # 8 produtos por página
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

@@ -1,8 +1,8 @@
 {% extends "global/base.html" %}
 {% load omfilters %}
-
-{% block conteudo %}
 {% block titulo %}Resumo{% endblock titulo %}
+{% block conteudo %}
+
 <div class="container mt-5">
     {% if carrinho %}
         <div class="row">
@@ -47,12 +47,19 @@
                 </ul>
             </div>
             <div class="col-lg-6 mt-3 mt-lg-0 d-flex flex-column justify-content-end">
-                <form method="post" action="{% url 'pedido:salvarpedido' %}">
+                
+                 {% comment %} descomentar isso quando for upar de verdade, vou upar no pythonanywhere {% endcomment %}
+
+                {% comment %} <a href="{% url 'produto:lista' %}" class="btn btn-primary mt-3">Ir para produtos</a> {% endcomment %}
+                {% comment %} <form method="post" action="{% url 'pedido:salvarpedido' %}">
                     {% csrf_token %}
                     <button class="btn btn-success btn-lg btn-block mb-2" type="submit">
                         Finalizar Compra
                     </button>
-                </form>
+                </form>  {% endcomment %}
+               <a href="{% url 'produto:whatsapp_pedido' %}" class="btn btn-success btn-lg btn-block mb-2">
+                        Finalizar Compra pelo WhatsApp
+                </a>
                 <a class="btn btn-outline-primary btn-lg btn-block" href="{% url 'produto:lista' %}">Continuar Comprando</a>
             </div>
         </div>
@@ -61,7 +68,8 @@
             <div class="col text-center">
                 <h3>Seu carrinho está vazio</h3>
                 <p class="lead">Adicione produtos para vê-los aqui.</p>
-                <a href="{% url 'produto:lista' %}" class="btn btn-primary mt-3">Ir para produtos</a>
+               
+                 <a href="{% url 'produto:lista' %}" class="btn btn-primary mt-3">Ir para produtos</a>
             </div>
         </div>
     {% endif %}

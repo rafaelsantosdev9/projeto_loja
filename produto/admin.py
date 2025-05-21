@@ -29,5 +29,6 @@ class ProdutoAdmin(admin.ModelAdmin):
 class VariacaoAdmin(admin.ModelAdmin):
     list_display = 'nome','produto','preco','imagem'
 
- 
-    
+@admin.register(models.Genero)
+class GeneroAdmin(admin.ModelAdmin):
+    list_display = 'nome',
