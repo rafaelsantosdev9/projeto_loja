@@ -20,6 +20,8 @@ Conta com sistema de autenticação, carrinho de compras e painel administrativo
 
 git clone https://github.com/rafaelsantosdev9/projeto_loja.git
 
+cd.\projeto_loja\
+
 python -m venv venv
 
 venv\Scripts\activate
