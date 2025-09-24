@@ -1,3 +1,5 @@
+import { gsap } from "gsap";
+
 document.addEventListener('DOMContentLoaded', function () {
     const botao = document.getElementById('botao-teste');
 
@@ -110,4 +112,17 @@ document.addEventListener('DOMContentLoaded', function () {
             this.src = '/static/img/sem-imagem.png'; // Caminho padrão para imagem de fallback
         };
     });
+});
+document.addEventListener("DOMContentLoaded", () => {
+    const botao = document.getElementById("botao-teste");
+
+    if (botao) {
+        // animação de entrada
+        gsap.from(botao, { duration: 1, y: -100, opacity: 0, ease: "bounce" });
+
+        // animação ao clicar
+        botao.addEventListener("click", () => {
+            gsap.to(botao, { duration: 0.5, scale: 1.2, yoyo: true, repeat: 1 });
+        });
+    }
 });

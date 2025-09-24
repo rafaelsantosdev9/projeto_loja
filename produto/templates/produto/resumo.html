@@ -5,71 +5,84 @@
 
 <div class="container mt-5">
     {% if carrinho %}
+        <!-- Título -->
         <div class="row">
-            <div class="col">
-                <h2 class="mb-4">Resumo da Compra</h2>
+            <div class="col text-center">
+                <h2 class="fw-bold">📋 Resumo da Compra</h2>
+                <p class="text-muted">Confira seus dados, itens no carrinho e finalize seu pedido.</p>
             </div>
         </div>
 
-        <!-- DADOS DO USUÁRIO -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <h4>Dados do Usuário</h4>
-                {% comment %} criar mais tarde pagina para editar apenas o endereço {% endcomment %}
-                <a href='{% url "perfil:criar" %}'>Editar dados </a>
-                <ul class="list-group">
-                    <li class="list-group-item"><strong>Nome:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</li>
-                    <li class="list-group-item"><strong>Email:</strong> {{ request.user.email }}</li>
-                    <li class="list-group-item"><strong>CPF:</strong> {{ request.user.perfil.cpf }}</li>
-                    <li class="list-group-item"><strong>Endereço:</strong> {{ request.user.perfil.endereco }}</li>
-                    <li class="list-group-item"><strong>Cidade:</strong> {{ request.user.perfil.cidade }} - {{ request.user.perfil.estado }}</li>
-                    <li class="list-group-item"><strong>CEP:</strong> {{ request.user.perfil.cep }}</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- CARRINHO -->
-        <div class="row">
-            <div class="col">
-                <h4 class="mb-3">Itens no Carrinho</h4>
-                {% include "global/partials/_carrinho.html" %}
-            </div>
-        </div>
-
-        <!-- RESUMO E AÇÕES -->
+        <!-- Dados do Usuário -->
         <div class="row mt-4">
-            <div class="col-lg-6">
-                <h4>Resumo de Pagamento</h4>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Total com desconto: <strong>R$ {{ carrinho|cart_totals }}</strong>
-                    </li>
-                </ul>
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h4 class="fw-semibold mb-0">👤 Seus Dados</h4>
+                            <a href="{% url 'perfil:criar' %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Nome:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</li>
+                            <li class="list-group-item"><strong>Email:</strong> {{ request.user.email }}</li>
+                            <li class="list-group-item"><strong>CPF:</strong> {{ request.user.perfil.cpf }}</li>
+                            <li class="list-group-item"><strong>Endereço:</strong> {{ request.user.perfil.endereco }}</li>
+                            <li class="list-group-item"><strong>Cidade:</strong> {{ request.user.perfil.cidade }} - {{ request.user.perfil.estado }}</li>
+                            <li class="list-group-item"><strong>CEP:</strong> {{ request.user.perfil.cep }}</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6 mt-3 mt-lg-0 d-flex flex-column justify-content-end">
-                
-                 {% comment %} descomentar isso quando for upar de verdade, vou upar no pythonanywhere {% endcomment %}
+        </div>
 
-                {% comment %} <a href="{% url 'produto:lista' %}" class="btn btn-primary mt-3">Ir para produtos</a> {% endcomment %}
-                {% comment %} <form method="post" action="{% url 'pedido:salvarpedido' %}">
-                    {% csrf_token %}
-                    <button class="btn btn-success btn-lg btn-block mb-2" type="submit">
-                        Finalizar Compra
-                    </button>
-                </form>  {% endcomment %}
-               <a href="{% url 'produto:whatsapp_pedido' %}" class="btn btn-success btn-lg btn-block mb-2">
-                        Finalizar Compra pelo WhatsApp
+        <!-- Itens no Carrinho -->
+        <div class="row mt-4">
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+                        <h4 class="fw-semibold mb-3">🛒 Itens no Carrinho</h4>
+                        {% include "global/partials/_carrinho.html" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumo e Ações -->
+        <div class="row mt-4">
+            <!-- Resumo de Pagamento -->
+            <div class="col-lg-6 mb-3">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+                        <h4 class="fw-semibold">💳 Resumo de Pagamento</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-medium">Total com desconto:</span>
+                                <strong class="text-success fs-5">R$ {{ carrinho|cart_totals }}</strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ações -->
+            <div class="col-lg-6 d-flex flex-column justify-content-end">
+                <a href="{% url 'produto:whatsapp_pedido' %}" class="btn btn-success btn-lg w-100 rounded-3 shadow-sm mb-2">
+                    📲 Finalizar Compra pelo WhatsApp
                 </a>
-                <a class="btn btn-outline-primary btn-lg btn-block" href="{% url 'produto:lista' %}">Continuar Comprando</a>
+                <a class="btn btn-outline-primary btn-lg w-100 rounded-3 shadow-sm" href="{% url 'produto:lista' %}">
+                    ➕ Continuar Comprando
+                </a>
             </div>
         </div>
     {% else %}
+        <!-- Carrinho vazio -->
         <div class="row mt-5">
             <div class="col text-center">
-                <h3>Seu carrinho está vazio</h3>
-                <p class="lead">Adicione produtos para vê-los aqui.</p>
-               
-                 <a href="{% url 'produto:lista' %}" class="btn btn-primary mt-3">Ir para produtos</a>
+                <h3 class="fw-bold">Seu carrinho está vazio 😢</h3>
+                <p class="text-muted">Adicione produtos para vê-los aqui.</p>
+                <a href="{% url 'produto:lista' %}" class="btn btn-primary btn-lg rounded-3 shadow-sm mt-3">
+                    🛍️ Ir para produtos
+                </a>
             </div>
         </div>
     {% endif %}

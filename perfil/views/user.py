@@ -85,7 +85,6 @@ def atualizar(request):
                 usuario.first_name = first_name
                 usuario.last_name  = last_name
                 
-
                 # precisa salvar o carrinho antes de alterar a senha e restaurá-lo após o re-login.
                 #se não o carrinho se perde quando os dados são atualizados
                 if password:

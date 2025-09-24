@@ -1,59 +1,69 @@
 {% extends "global/base.html" %}
+{% block titulo %}Dados do Usuário{% endblock titulo %}
 
 {% block conteudo %}
-{% block titulo %}Dados Usuario{% endblock titulo %}Dados Usuario
+{% load widget_tweaks %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg rounded-4">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Usuário {{request.user}}</h2>
+        <div class="col-lg-6 col-md-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="h4 mb-0">
+                        👤 {% if request.user.is_authenticated %} Atualizar Dados {% else %} Criar Conta {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <!-- Exibe o nome do usuário logado -->
+                    {% if request.user.is_authenticated %}
+                        <p class="text-muted text-center mb-4">
+                            Usuário logado: <strong>{{ request.user }}</strong>
+                        </p>
+                    {% endif %}
 
-                    {# Ação: atualizar se logado, criar se não logado #}
                     <form method="POST" action="{% if request.user.is_authenticated %}{% url 'perfil:atualizar' %}{% else %}{% url 'perfil:criar' %}{% endif %}" novalidate>
-
                         {% csrf_token %}
 
-                        {# Campos do formulário do usuário #}
+                        <!-- Campos do formulário do usuário -->
                         {% for field in userform %}
-                            
-                                <div class="mb-3">
-                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                    {{ field }}
-                                    {% if field.errors %}
-                                        <div class="text-danger small mt-1">
-                                            {{ field.errors|striptags }}
-                                        </div>
-                                    
-                                </div>
-                            {% endif %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">{{ field.label }}</label>
+                                {{ field|add_class:"form-control form-control-lg" }}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
                         {% endfor %}
 
-                        {# Campos do formulário de perfil #}
-                        
-                        
-                            {% for field in perfilform %}
-                                <div class="mb-3">
-                                     <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                         {{ field }}
-                                        {% if field.errors %}
-                                            <div class="text-danger small mt-1">
-                                                {{ field.errors|striptags }}
-                                            </div>
-                                        {% endif %}
-                                </div>
-                            {% endfor %}
-                        
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                        <!-- Campos do formulário de perfil -->
+                        {% for field in perfilform %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">{{ field.label }}</label>
+                                {{ field|add_class:"form-control form-control-lg" }}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ field.errors|striptags }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Botão -->
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3 shadow-sm">
                                 {% if request.user.is_authenticated %}
-                                    Atualizar
+                                    Atualizar Dados
                                 {% else %}
-                                    Cadastrar
+                                    Criar Conta
                                 {% endif %}
                             </button>
                         </div>
                     </form>
+                </div>
+                <div class="card-footer text-center text-muted small py-3">
+                    Seus dados estão seguros 🔒
                 </div>
             </div>
         </div>

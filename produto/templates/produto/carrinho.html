@@ -1,49 +1,73 @@
 {% extends "global/base.html" %}
+{% block titulo %}Carrinho{% endblock titulo %}
 {% block conteudo %}
 {% load omfilters %}
+
 {% if carrinho %}
-{% block titulo %}Carrinho{% endblock titulo %}Carrinho
-<div class="row mt-3">
-    <div class="col">
-        <h3>Carrinho de Compras</h3>
-        <p class="lead">Confira os produtos, variações, quantidades e preços abaixo.</p>
+<div class="row mt-4">
+    <div class="col text-center">
+        <h2 class="fw-bold">🛒 Carrinho de Compras</h2>
+        <p class="text-muted">Confira seus produtos, variações e valores antes de finalizar.</p>
     </div>
 </div>
 
-{% include "global/partials/_carrinho.html" %}
+<div class="card shadow-sm border-0 rounded-3 mt-3">
+    <div class="card-body">
+        {% include "global/partials/_carrinho.html" %}
+    </div>
+</div>
 
 <div class="row mt-4">
-    <div class="col-lg-6">
-        <h4>Resumo</h4>
-        <ul class="list-group">
-            <li class="list-group-item">
-                Total com desconto: <strong>R$ {{ carrinho|cart_totals }}</strong>
-            </li>
-        </ul>
+    <!-- Resumo -->
+    <div class="col-lg-6 mb-3">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body">
+                <h4 class="fw-semibold">Resumo</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-medium">Total com desconto:</span>
+                        <strong class="text-success fs-5">R$ {{ carrinho|cart_totals }}</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div class="col-lg-6 mt-3 mt-lg-0 d-flex flex-column justify-content-end">
-        <form method="post" action="{% url 'produto:esvaziarcarrinho' %}">
+
+    <!-- Ações -->
+    <div class="col-lg-6 d-flex flex-column justify-content-end">
+        <form method="post" action="{% url 'produto:esvaziarcarrinho' %}" class="mb-2">
             {% csrf_token %}
-            <button class="btn btn-danger btn-lg btn-block mb-2" type="submit">
-                Esvaziar Carrinho
+            <button class="btn btn-danger btn-lg w-100 rounded-3 shadow-sm" type="submit">
+                🗑️ Esvaziar Carrinho
             </button>
         </form>
+
         {% if request.user.is_authenticated %}
-        <a class="btn btn-success btn-lg btn-block mb-2" href="{% url 'produto:resumo' %}">Continuar compra</a>
+        <a class="btn btn-success btn-lg w-100 rounded-3 shadow-sm mb-2" href="{% url 'produto:resumo' %}">
+            ✅ Continuar Compra
+        </a>
         {% else %}
-        <a class="btn btn-success btn-lg btn-block mb-2" href="{% url 'perfil:login' %}">Continuar Compra</a>
+        <a class="btn btn-success btn-lg w-100 rounded-3 shadow-sm mb-2" href="{% url 'perfil:login' %}">
+            🔑 Fazer Login e Continuar
+        </a>
         {% endif %}
-        <a class="btn btn-outline-primary btn-lg btn-block" href="{% url 'produto:lista' %}">Adicionar mais produtos</a>
+
+        <a class="btn btn-outline-primary btn-lg w-100 rounded-3 shadow-sm" href="{% url 'produto:lista' %}">
+            ➕ Adicionar mais produtos
+        </a>
     </div>
 </div>
 
 {% else %}
 
+<!-- Carrinho vazio -->
 <div class="row mt-5">
     <div class="col text-center">
-        <h3>Seu carrinho está vazio</h3>
-        <p class="lead">Adicione produtos para vê-los aqui.</p>
-        <a href="{% url 'produto:lista' %}" class="btn btn-primary mt-3">Ir para produtos</a>
+        <h3 class="fw-bold">Seu carrinho está vazio 😢</h3>
+        <p class="text-muted">Adicione produtos para vê-los aqui.</p>
+        <a href="{% url 'produto:lista' %}" class="btn btn-primary btn-lg rounded-3 shadow-sm mt-3">
+            🛍️ Ir para produtos
+        </a>
     </div>
 </div>
 
