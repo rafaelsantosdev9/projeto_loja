@@ -58,7 +58,7 @@ def lista_produto(request):
     generos = Genero.objects.all()
 
     context = {
-        'produtos': produtos,
+        
         'page_obj': page_obj,
         'generos':generos,
         'ordenar':ordenar,

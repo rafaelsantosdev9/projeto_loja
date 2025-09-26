@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 
 
 
-    'debug_toolbar', #remove debug toolbar
+    
 ]
 
 LOGIN_URL = 'perfil:login'
@@ -68,8 +68,7 @@ MIDDLEWARE = [
 
 
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-     #remove debug toolbar
+    
 ]
 
 ROOT_URLCONF = 'project.urls'

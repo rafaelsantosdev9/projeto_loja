@@ -50,28 +50,27 @@ def salvarpedido (request):
     )
     pedido.save()
     ItemPedido.objects.bulk_create(
-        [
-            ItemPedido(
-                pedido=pedido,
-                produto = v['nome_produto'],
-                produto_id=Produto.objects.get(id=v['produto_id']),
-                variacao =v['nome'],
-                variacao_id =v['produto_id'],
-                preco =v['preco_quantitativo'],
-                preco_promocional =v['preco_quantitativo_promocional'],
-                quantidade = v['quantidade'],
-                imagem = v['imagem']
-               )
-            for v in carrinho.values()
-        ]
-    )
-    contexto={
-            'pedido':pedido
-    }
-    
-    messages.success(request,'Pedido criado com sucesso')
+    [
+        ItemPedido(
+            pedido=pedido,
+            produto=v['nome_produto'],
+            produto_id=Produto.objects.get(id=v['produto_id']),
+            variacao=v['nome'],
+            variacao_id=v['produto_id'],
+            preco=v['preco_quantitativo'],
+            preco_promocional=v['preco_quantitativo_promocional'],
+            quantidade=v['quantidade'],
+            imagem=v['imagem']
+        )
+        for v in carrinho.values()
+    ]
+)
 
-    
+# Esvazia o carrinho da sessão
+    del request.session['carrinho']
+    request.session.save()
+
+    messages.success(request, 'Pedido criado com sucesso!')
     return redirect('pedido:pagar', pedido_id=pedido.id)
     
    

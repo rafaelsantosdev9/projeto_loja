@@ -66,13 +66,17 @@
 
             <!-- Ações -->
             <div class="col-lg-6 d-flex flex-column justify-content-end">
-                <a href="{% url 'produto:whatsapp_pedido' %}" class="btn btn-success btn-lg w-100 rounded-3 shadow-sm mb-2">
-                    📲 Finalizar Compra pelo WhatsApp
-                </a>
+                <form method="post" action="{% url 'pedido:salvarpedido' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-lg w-100 rounded-3 shadow-sm mb-2">
+                        ✅ Finalizar Pedido
+                    </button>
+                </form>
+
                 <a class="btn btn-outline-primary btn-lg w-100 rounded-3 shadow-sm" href="{% url 'produto:lista' %}">
-                    ➕ Continuar Comprando
+                        ➕ Continuar Comprando
                 </a>
-            </div>
+</div>
         </div>
     {% else %}
         <!-- Carrinho vazio -->
